@@ -34,6 +34,10 @@ trait GameDef {
 
     /** The position obtained by changing the `col` coordinate by `d` */
     def deltaCol(d: Int): Pos = copy(col = col + d)
+
+    def isEqual(pos: Pos): Boolean = {
+      this.row == pos.row && this.col == pos.col
+    }
   }
 
   /**
@@ -81,7 +85,7 @@ trait GameDef {
    * This function returns the block at the start position of
    * the game.
    */
-  def startBlock: Block = ???
+  def startBlock: Block = Block(startPos, startPos)
 
 
   /**
@@ -132,22 +136,26 @@ trait GameDef {
      * Returns the list of blocks that can be obtained by moving
      * the current block, together with the corresponding move.
      */
-    def neighbors: List[(Block, Move)] = ???
+    def neighbors: List[(Block, Move)] = {
+      List((left, Left), (right, Right), (up, Up), (down, Down))
+    }
 
     /**
      * Returns the list of positions reachable from the current block
      * which are inside the terrain.
      */
-    def legalNeighbors: List[(Block, Move)] = ???
+    def legalNeighbors: List[(Block, Move)] = {
+      neighbors.filter(_._1.isLegal)
+    }
 
     /**
      * Returns `true` if the block is standing.
      */
-    def isStanding: Boolean = ???
+    def isStanding: Boolean = b1.isEqual(b2)
 
     /**
      * Returns `true` if the block is entirely inside the terrain.
      */
-    def isLegal: Boolean = ???
+    def isLegal: Boolean = terrain(b1) && terrain(b2)
   }
 }
